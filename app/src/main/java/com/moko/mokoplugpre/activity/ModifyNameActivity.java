@@ -17,6 +17,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -30,13 +31,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ModifyNameActivity extends BaseActivity {
     private final String FILTER_ASCII = "\\A\\p{ASCII}*\\z";
 
 
-    @BindView(R.id.et_device_name)
+    @BindView(R2.id.et_device_name)
     EditText etDeviceName;
     private boolean mReceiverTag = false;
 
@@ -144,22 +144,22 @@ public class ModifyNameActivity extends BaseActivity {
         }
     };
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                finish();
-                break;
-            case R.id.tv_confirm:
-                String deviceName = etDeviceName.getText().toString();
-                if (TextUtils.isEmpty(deviceName)) {
-                    ToastUtils.showToast(this, R.string.modify_device_name_empty);
-                    return;
-                }
-                showSyncingProgressDialog();
-                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeAdvName(deviceName));
-                break;
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        finish();
+    }
+
+    public void onConfirm(View view) {
+        if (isWindowLocked())
+            return;
+        String deviceName = etDeviceName.getText().toString();
+        if (TextUtils.isEmpty(deviceName)) {
+            ToastUtils.showToast(this, R.string.modify_device_name_empty);
+            return;
         }
+        showSyncingProgressDialog();
+        MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeAdvName(deviceName));
     }
 
     @Override

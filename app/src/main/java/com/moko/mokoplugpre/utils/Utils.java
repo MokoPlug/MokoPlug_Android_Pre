@@ -7,12 +7,10 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 
 import com.moko.mokoplugpre.BuildConfig;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import androidx.core.content.FileProvider;

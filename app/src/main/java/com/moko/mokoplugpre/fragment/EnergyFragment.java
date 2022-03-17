@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.activity.DeviceInfoActivity;
 import com.moko.mokoplugpre.adapter.EnergyListAdapter;
 import com.moko.support.pre.MokoSupport;
@@ -36,19 +37,19 @@ import butterknife.ButterKnife;
 public class EnergyFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
 
     private static final String TAG = EnergyFragment.class.getSimpleName();
-    @BindView(R.id.rg_energy)
+    @BindView(R2.id.rg_energy)
     RadioGroup rgEnergy;
-    @BindView(R.id.tv_energy_total)
+    @BindView(R2.id.tv_energy_total)
     TextView tvEnergyTotal;
-    @BindView(R.id.tv_duration)
+    @BindView(R2.id.tv_duration)
     TextView tvDuration;
-    @BindView(R.id.tv_unit)
+    @BindView(R2.id.tv_unit)
     TextView tvUnit;
-    @BindView(R.id.rv_energy)
+    @BindView(R2.id.rv_energy)
     RecyclerView rvEnergy;
-    @BindView(R.id.rb_daily)
+    @BindView(R2.id.rb_daily)
     RadioButton rbDaily;
-    @BindView(R.id.rb_monthly)
+    @BindView(R2.id.rb_monthly)
     RadioButton rbMonthly;
     private EnergyListAdapter adapter;
 
@@ -159,40 +160,37 @@ public class EnergyFragment extends Fragment implements RadioGroup.OnCheckedChan
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         int electricityConstant = MokoSupport.getInstance().electricityConstant;
         int total;
-        switch (checkedId) {
-            case R.id.rb_daily:
-                // 切换日
-                total = MokoSupport.getInstance().eneryTotalToday;
-                float totalToday = total * 1.0f / electricityConstant;
-                String eneryTotalToday = MokoUtils.getDecimalFormat("0.##").format(totalToday);
-                tvEnergyTotal.setText(eneryTotalToday);
-                Calendar calendarDaily = Calendar.getInstance();
-                String time = MokoUtils.calendar2strDate(calendarDaily, "HH");
-                String date = MokoUtils.calendar2strDate(calendarDaily, "MM-dd");
-                tvDuration.setText(String.format("00:00 to %s:00,%s", time, date));
-                tvUnit.setText("Hour");
-                List<EnergyInfo> energyHistoryToday = MokoSupport.getInstance().energyHistoryToday;
-                if (energyHistoryToday != null) {
-                    adapter.replaceData(energyHistoryToday);
-                }
-                break;
-            case R.id.rb_monthly:
-                // 切换月
-                total = MokoSupport.getInstance().eneryTotalMonthly;
-                float totalMonthly = total * 1.0f / electricityConstant;
-                String eneryTotalMonthly = MokoUtils.getDecimalFormat("0.##").format(totalMonthly);
-                tvEnergyTotal.setText(eneryTotalMonthly);
-                Calendar calendarMonthly = Calendar.getInstance();
-                String end = MokoUtils.calendar2strDate(calendarMonthly, "MM-dd");
-                calendarMonthly.add(Calendar.DAY_OF_MONTH, -29);
-                String start = MokoUtils.calendar2strDate(calendarMonthly, "MM-dd");
-                tvDuration.setText(String.format("%s to %s", start, end));
-                tvUnit.setText("Date");
-                List<EnergyInfo> energyHistory = MokoSupport.getInstance().energyHistory;
-                if (energyHistory != null) {
-                    adapter.replaceData(energyHistory);
-                }
-                break;
+        if (checkedId == R.id.rb_daily) {
+            // 切换日
+            total = MokoSupport.getInstance().eneryTotalToday;
+            float totalToday = total * 1.0f / electricityConstant;
+            String eneryTotalToday = MokoUtils.getDecimalFormat("0.##").format(totalToday);
+            tvEnergyTotal.setText(eneryTotalToday);
+            Calendar calendarDaily = Calendar.getInstance();
+            String time = MokoUtils.calendar2strDate(calendarDaily, "HH");
+            String date = MokoUtils.calendar2strDate(calendarDaily, "MM-dd");
+            tvDuration.setText(String.format("00:00 to %s:00,%s", time, date));
+            tvUnit.setText("Hour");
+            List<EnergyInfo> energyHistoryToday = MokoSupport.getInstance().energyHistoryToday;
+            if (energyHistoryToday != null) {
+                adapter.replaceData(energyHistoryToday);
+            }
+        } else if (checkedId == R.id.rb_monthly) {
+            // 切换月
+            total = MokoSupport.getInstance().eneryTotalMonthly;
+            float totalMonthly = total * 1.0f / electricityConstant;
+            String eneryTotalMonthly = MokoUtils.getDecimalFormat("0.##").format(totalMonthly);
+            tvEnergyTotal.setText(eneryTotalMonthly);
+            Calendar calendarMonthly = Calendar.getInstance();
+            String end = MokoUtils.calendar2strDate(calendarMonthly, "MM-dd");
+            calendarMonthly.add(Calendar.DAY_OF_MONTH, -29);
+            String start = MokoUtils.calendar2strDate(calendarMonthly, "MM-dd");
+            tvDuration.setText(String.format("%s to %s", start, end));
+            tvUnit.setText("Date");
+            List<EnergyInfo> energyHistory = MokoSupport.getInstance().energyHistory;
+            if (energyHistory != null) {
+                adapter.replaceData(energyHistory);
+            }
         }
     }
 

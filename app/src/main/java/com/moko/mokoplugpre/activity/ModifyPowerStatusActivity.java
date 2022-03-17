@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -31,13 +32,13 @@ import butterknife.ButterKnife;
 
 public class ModifyPowerStatusActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
-    @BindView(R.id.rb_switch_off)
+    @BindView(R2.id.rb_switch_off)
     RadioButton rbSwitchOff;
-    @BindView(R.id.rb_switch_on)
+    @BindView(R2.id.rb_switch_on)
     RadioButton rbSwitchOn;
-    @BindView(R.id.rb_last_status)
+    @BindView(R2.id.rb_last_status)
     RadioButton rbLastStatus;
-    @BindView(R.id.rg_power_status)
+    @BindView(R2.id.rg_power_status)
     RadioGroup rgPowerStatus;
     private boolean mReceiverTag = false;
 
@@ -170,16 +171,12 @@ public class ModifyPowerStatusActivity extends BaseActivity implements RadioGrou
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.rb_switch_off:
-                powerState = 0;
-                break;
-            case R.id.rb_switch_on:
-                powerState = 1;
-                break;
-            case R.id.rb_last_status:
-                powerState = 2;
-                break;
+        if (checkedId == R.id.rb_switch_off) {
+            powerState = 0;
+        } else if (checkedId == R.id.rb_switch_on) {
+            powerState = 1;
+        } else if (checkedId == R.id.rb_last_status) {
+            powerState = 2;
         }
         showSyncingProgressDialog();
         MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writePowerState(powerState));

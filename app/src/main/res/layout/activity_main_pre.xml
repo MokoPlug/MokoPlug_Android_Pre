@@ -15,6 +15,8 @@
             android:id="@+id/iv_refresh"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:onClick="onRefresh"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:src="@drawable/refresh" />
@@ -33,6 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:onClick="onAbout"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:src="@drawable/about" />
@@ -46,6 +50,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp"
         android:background="@drawable/shape_edit_grey_bg"
+        android:clickable="true"
+        android:onClick="onFilter"
         android:paddingLeft="12dp"
         android:paddingRight="12dp">
 
@@ -67,6 +73,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginRight="12dp"
         android:background="@drawable/shape_edit_grey_bg"
+        android:clickable="true"
+        android:onClick="onFilter"
         android:paddingLeft="12dp"
         android:visibility="gone">
 
@@ -84,6 +92,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:onClick="onFilterDelete"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:src="@drawable/filter_delete" />

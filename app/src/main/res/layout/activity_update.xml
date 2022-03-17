@@ -14,9 +14,11 @@
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:drawableLeft="@drawable/back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
+            android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
             android:textColor="@color/white_ffffff"
@@ -89,6 +91,8 @@
             android:id="@+id/iv_choose_file"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:clickable="true"
+            android:onClick="onChooseFile"
             android:paddingLeft="12dp"
             android:src="@drawable/ic_choose_file" />
 
@@ -101,7 +105,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:background="@drawable/shape_btn_bg"
+        android:clickable="true"
         android:gravity="center"
+        android:onClick="onConfirm"
         android:text="@string/confirm"
         android:textColor="@color/white_ffffff"
         android:textSize="18sp" />

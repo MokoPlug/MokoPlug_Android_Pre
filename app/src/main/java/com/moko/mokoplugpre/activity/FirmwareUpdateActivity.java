@@ -17,6 +17,7 @@ import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.service.DfuService;
 import com.moko.mokoplugpre.utils.FileUtils;
 import com.moko.mokoplugpre.utils.ToastUtils;
@@ -31,7 +32,6 @@ import java.io.File;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import no.nordicsemi.android.dfu.DfuProgressListener;
 import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
@@ -42,9 +42,9 @@ public class FirmwareUpdateActivity extends BaseActivity {
 
     public String mDeviceMac;
     public String mDeviceName;
-    @BindView(R.id.tv_firmware_version)
+    @BindView(R2.id.tv_firmware_version)
     TextView tvFirmwareVersion;
-    @BindView(R.id.tv_firmware_path)
+    @BindView(R2.id.tv_firmware_path)
     TextView tvFirmwarePath;
     private boolean isUpdate;
 
@@ -78,32 +78,35 @@ public class FirmwareUpdateActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm, R.id.iv_choose_file})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                finish();
-                break;
-            case R.id.tv_confirm:
-                String firmwareFilePath = tvFirmwarePath.getText().toString();
-                final File firmwareFile = new File(firmwareFilePath);
-                if (firmwareFile.exists()) {
-                    final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                            .setDeviceName(mDeviceName)
-                            .setKeepBond(false)
-                            .setDisableNotification(true);
-                    starter.setZip(null, firmwareFilePath);
-                    starter.start(this, DfuService.class);
-                    showDFUProgressDialog("Waiting...");
-                    isUpdate = true;
-                } else {
-                    ToastUtils.showToast(this, "file is not exists!");
-                }
-                break;
-            case R.id.iv_choose_file:
-                chooseFirmwareFile();
-                break;
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        finish();
+    }
+
+    public void onConfirm(View view) {
+        if (isWindowLocked())
+            return;
+        String firmwareFilePath = tvFirmwarePath.getText().toString();
+        final File firmwareFile = new File(firmwareFilePath);
+        if (firmwareFile.exists()) {
+            final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
+                    .setDeviceName(mDeviceName)
+                    .setKeepBond(false)
+                    .setDisableNotification(true);
+            starter.setZip(null, firmwareFilePath);
+            starter.start(this, DfuService.class);
+            showDFUProgressDialog("Waiting...");
+            isUpdate = true;
+        } else {
+            ToastUtils.showToast(this, "file is not exists!");
         }
+    }
+
+    public void onChooseFile(View view) {
+        if (isWindowLocked())
+            return;
+        chooseFirmwareFile();
     }
 
     @Override

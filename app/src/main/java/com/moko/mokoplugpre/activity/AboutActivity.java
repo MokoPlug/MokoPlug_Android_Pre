@@ -23,7 +23,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_about_pre);
         ButterKnife.bind(this);
         if (!BuildConfig.IS_LIBRARY) {
             tvSoftVersion.setText(String.format(getString(R.string.version_info), Utils.getVersionInfo(this)));

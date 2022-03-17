@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.view.ProgressDrawable;
 
 import androidx.annotation.StringRes;
@@ -18,9 +19,9 @@ import butterknife.ButterKnife;
 public class LoadingMessageDialog extends BaseDialog {
     private static final int DIALOG_DISMISS_DELAY_TIME = 5000;
     public static final String TAG = LoadingMessageDialog.class.getSimpleName();
-    @BindView(R.id.iv_loading)
+    @BindView(R2.id.iv_loading)
     ImageView ivLoading;
-    @BindView(R.id.tv_loading_message)
+    @BindView(R2.id.tv_loading_message)
     TextView tvLoadingMessage;
 
     private String message;

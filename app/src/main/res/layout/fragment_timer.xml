@@ -35,6 +35,8 @@
         android:layout_width="120dp"
         android:layout_height="32dp"
         android:layout_marginTop="40dp"
+        android:clickable="true"
+        android:onClick="onTimer"
         app:cardBackgroundColor="@color/blue_2681ff"
         app:cardCornerRadius="16dp"
         app:cardPreventCornerOverlap="false"

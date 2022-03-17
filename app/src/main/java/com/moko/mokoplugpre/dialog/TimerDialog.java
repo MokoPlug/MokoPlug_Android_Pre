@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.view.WheelView;
 
 import java.util.ArrayList;
@@ -12,20 +13,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * @Date 2020/4/25
- * @Author wenzheng.liu
- * @Description
- * @ClassPath com.moko.mokoplugpre.dialog.TimerDialog
- */
 public class TimerDialog extends BaseDialog {
     public static final String TAG = TimerDialog.class.getSimpleName();
 
-    @BindView(R.id.tv_switch_state)
+    @BindView(R2.id.tv_switch_state)
     TextView tvSwitchState;
-    @BindView(R.id.wv_hour)
+    @BindView(R2.id.wv_hour)
     WheelView wvHour;
-    @BindView(R.id.wv_minute)
+    @BindView(R2.id.wv_minute)
     WheelView wvMinute;
     private boolean on_off;
 
@@ -72,16 +67,15 @@ public class TimerDialog extends BaseDialog {
         return wvMinute.getSelected();
     }
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                dismiss();
-                break;
-            case R.id.tv_confirm:
-                listener.onConfirmClick(this);
-                break;
-        }
+
+    @OnClick(R2.id.tv_back)
+    public void onBack(View view) {
+        dismiss();
+    }
+
+    @OnClick(R2.id.tv_confirm)
+    public void onConfirm(View view) {
+        listener.onConfirmClick(this);
     }
 
     private TimerListener listener;

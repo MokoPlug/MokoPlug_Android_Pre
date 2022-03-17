@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.support.pre.MokoSupport;
 
 import org.greenrobot.eventbus.EventBus;
@@ -25,13 +26,13 @@ import butterknife.ButterKnife;
 public class MoreActivity extends BaseActivity {
 
 
-    @BindView(R.id.tv_title)
+    @BindView(R2.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.tv_product_name)
+    @BindView(R2.id.tv_product_name)
     TextView tvProductName;
-    @BindView(R.id.tv_firmware_version)
+    @BindView(R2.id.tv_firmware_version)
     TextView tvFirmwareVersion;
-    @BindView(R.id.tv_device_mac)
+    @BindView(R2.id.tv_device_mac)
     TextView tvDeviceMac;
 
     @Override

@@ -125,8 +125,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="24dp"
         android:layout_marginTop="14dp"
+        android:layout_marginRight="24dp"
         android:text="KWh.Ec"
         android:textColor="@color/black_333333"
         android:textSize="18sp"

@@ -101,6 +101,8 @@
         android:layout_width="120dp"
         android:layout_height="32dp"
         android:layout_marginTop="40dp"
+        android:clickable="true"
+        android:onClick="onOnOff"
         app:cardBackgroundColor="@color/white_ffffff"
         app:cardCornerRadius="16dp"
         app:cardPreventCornerOverlap="false"

@@ -1,7 +1,6 @@
 package com.moko.mokoplugpre.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +12,9 @@ import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.mokoplugpre.AppConstants;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.activity.AdvIntervalActivity;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.activity.DeviceInfoActivity;
-import com.moko.mokoplugpre.activity.EnergySavedIntervalActivity;
-import com.moko.mokoplugpre.activity.EnergySavedPercentActivity;
-import com.moko.mokoplugpre.activity.FirmwareUpdateActivity;
-import com.moko.mokoplugpre.activity.ModifyNameActivity;
-import com.moko.mokoplugpre.activity.ModifyPowerStatusActivity;
-import com.moko.mokoplugpre.activity.OverloadValueActivity;
 import com.moko.support.pre.MokoSupport;
 import com.moko.support.pre.entity.OrderCHAR;
 
@@ -32,22 +24,21 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class SettingFragment extends Fragment {
 
     private static final String TAG = SettingFragment.class.getSimpleName();
-    @BindView(R.id.tv_device_name)
+    @BindView(R2.id.tv_device_name)
     TextView tvDeviceName;
-    @BindView(R.id.tv_adv_interval)
+    @BindView(R2.id.tv_adv_interval)
     TextView tvAdvInterval;
-    @BindView(R.id.tv_overload_value)
+    @BindView(R2.id.tv_overload_value)
     TextView tvOverloadValue;
-    @BindView(R.id.tv_energy_saved_interval)
+    @BindView(R2.id.tv_energy_saved_interval)
     TextView tvEnergySavedInterval;
-    @BindView(R.id.tv_energy_saved_percent)
+    @BindView(R2.id.tv_energy_saved_percent)
     TextView tvEnergySavedPercent;
-    @BindView(R.id.tv_energy_consumption)
+    @BindView(R2.id.tv_energy_consumption)
     TextView tvEnergyConsumption;
 
     private DeviceInfoActivity activity;
@@ -134,92 +125,27 @@ public class SettingFragment extends Fragment {
         super.onDestroy();
     }
 
-    @OnClick({R.id.rl_modify_name, R.id.rl_modify_power_status, R.id.rl_check_update, R.id.rl_adv_interval
-            , R.id.rl_overload_value, R.id.rl_power_report_interval, R.id.rl_power_change_notification
-            , R.id.rl_energy_consumption, R.id.tv_reset})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.rl_modify_name:
-                // 修改名称
-                startActivityForResult(new Intent(getActivity(), ModifyNameActivity.class), AppConstants.REQUEST_CODE_MODIFY_NAME);
-                break;
-            case R.id.rl_modify_power_status:
-                // 修改上电状态
-                startActivityForResult(new Intent(getActivity(), ModifyPowerStatusActivity.class), AppConstants.REQUEST_CODE_MODIFY_POWER_STATUS);
-                break;
-            case R.id.rl_check_update:
-                // 升级
-                startActivityForResult(new Intent(getActivity(), FirmwareUpdateActivity.class), AppConstants.REQUEST_CODE_UPDATE);
-                break;
-            case R.id.rl_adv_interval:
-                // 修改广播间隔
-                startActivityForResult(new Intent(getActivity(), AdvIntervalActivity.class), AppConstants.REQUEST_CODE_ADV_INTERVAL);
-                break;
-            case R.id.rl_overload_value:
-                // 修改过载保护值
-                startActivityForResult(new Intent(getActivity(), OverloadValueActivity.class), AppConstants.REQUEST_CODE_OVERLOAD_VALUE);
-                break;
-            case R.id.rl_power_report_interval:
-                // 修改电能上报间隔
-                startActivityForResult(new Intent(getActivity(), EnergySavedIntervalActivity.class), AppConstants.REQUEST_CODE_ENERGY_SAVED_INTERVAL);
-                break;
-            case R.id.rl_power_change_notification:
-                // 修改电能变化百分比
-                startActivityForResult(new Intent(getActivity(), EnergySavedPercentActivity.class), AppConstants.REQUEST_CODE_ENERGY_SAVED_PERCENT);
-                break;
-            case R.id.rl_energy_consumption:
-                // 重置累计电能
-                activity.resetEnergyConsumption();
-                break;
-            case R.id.tv_reset:
-                // 重置
-                activity.reset();
-                break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppConstants.REQUEST_CODE_MODIFY_NAME) {
-            if (resultCode == getActivity().RESULT_OK) {
-                final String deviceName = MokoSupport.getInstance().advName;
-                tvDeviceName.setText(deviceName);
-                activity.changeName();
-            }
-        }
-        if (requestCode == AppConstants.REQUEST_CODE_ADV_INTERVAL) {
-            if (resultCode == getActivity().RESULT_OK) {
-                final int advInterval = MokoSupport.getInstance().advInterval;
-                tvAdvInterval.setText(String.valueOf(advInterval));
-            }
-        }
-        if (requestCode == AppConstants.REQUEST_CODE_OVERLOAD_VALUE) {
-            if (resultCode == getActivity().RESULT_OK) {
-                final int overloadTopValue = MokoSupport.getInstance().overloadTopValue;
-                tvOverloadValue.setText(String.valueOf(overloadTopValue));
-            }
-        }
-        if (requestCode == AppConstants.REQUEST_CODE_ENERGY_SAVED_INTERVAL) {
-            if (resultCode == getActivity().RESULT_OK) {
-                final int energySavedInterval = MokoSupport.getInstance().energySavedInterval;
-                tvEnergySavedInterval.setText(String.valueOf(energySavedInterval));
-            }
-        }
-        if (requestCode == AppConstants.REQUEST_CODE_ENERGY_SAVED_PERCENT) {
-            if (resultCode == getActivity().RESULT_OK) {
-                final int energySavedPercent = MokoSupport.getInstance().energySavedPercent;
-                tvEnergySavedPercent.setText(String.valueOf(energySavedPercent));
-            }
-        }
-        if (requestCode == AppConstants.REQUEST_CODE_UPDATE) {
-            if (resultCode == getActivity().RESULT_OK) {
-                activity.finish();
-            }
-        }
-    }
-
     public void resetEnergyTotal() {
         tvEnergyConsumption.setText("0");
+    }
+
+    public void setDeviceName(String deviceName) {
+        tvDeviceName.setText(deviceName);
+    }
+
+    public void setAdvInterval(int advInterval) {
+        tvAdvInterval.setText(String.valueOf(advInterval));
+    }
+
+    public void setOverloadTopValue(int overloadTopValue) {
+        tvOverloadValue.setText(String.valueOf(overloadTopValue));
+    }
+
+    public void setEnergySavedInterval(int energySavedInterval) {
+        tvEnergySavedInterval.setText(String.valueOf(energySavedInterval));
+    }
+
+    public void setEnergySavedPercent(int energySavedPercent) {
+        tvEnergySavedPercent.setText(String.valueOf(energySavedPercent));
     }
 }

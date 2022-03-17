@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -28,11 +29,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class OverloadValueActivity extends BaseActivity {
 
-    @BindView(R.id.et_overload_value)
+    @BindView(R2.id.et_overload_value)
     EditText etOverloadValue;
     private boolean mReceiverTag = false;
 
@@ -129,27 +129,27 @@ public class OverloadValueActivity extends BaseActivity {
         }
     };
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                finish();
-                break;
-            case R.id.tv_confirm:
-                String overloadValue = etOverloadValue.getText().toString();
-                if (TextUtils.isEmpty(overloadValue)) {
-                    ToastUtils.showToast(this, "can't be blank");
-                    return;
-                }
-                int value = Integer.parseInt(overloadValue);
-                if (value < 10 || value > 3680) {
-                    ToastUtils.showToast(this, "the range is 10~3680");
-                    return;
-                }
-                showSyncingProgressDialog();
-                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeOverloadTopValue(value));
-                break;
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        finish();
+    }
+
+    public void onConfirm(View view) {
+        if (isWindowLocked())
+            return;
+        String overloadValue = etOverloadValue.getText().toString();
+        if (TextUtils.isEmpty(overloadValue)) {
+            ToastUtils.showToast(this, "can't be blank");
+            return;
         }
+        int value = Integer.parseInt(overloadValue);
+        if (value < 10 || value > 3680) {
+            ToastUtils.showToast(this, "the range is 10~3680");
+            return;
+        }
+        showSyncingProgressDialog();
+        MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeOverloadTopValue(value));
     }
 
     @Override

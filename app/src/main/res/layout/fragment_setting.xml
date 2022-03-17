@@ -24,6 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyName"
             android:padding="12dp">
 
             <TextView
@@ -53,6 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyPowerStatus"
             android:padding="12dp">
 
             <TextView
@@ -82,6 +86,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onCheckUpdate"
             android:padding="12dp">
 
             <TextView
@@ -118,6 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyAdvInterval"
             android:padding="12dp">
 
             <TextView
@@ -147,6 +155,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyOverloadValue"
             android:padding="12dp">
 
             <TextView
@@ -176,6 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyPowerReportInterval"
             android:padding="12dp">
 
             <TextView
@@ -206,6 +218,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyPowerChangeNotification"
             android:padding="12dp">
 
             <TextView
@@ -235,6 +249,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1px"
             android:background="@color/white_ffffff"
+            android:clickable="true"
+            android:onClick="onModifyEnergyConsumption"
             android:padding="12dp">
 
             <TextView
@@ -264,7 +280,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/white_ffffff"
+            android:clickable="true"
             android:gravity="center"
+            android:onClick="onReset"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:text="Reset device"

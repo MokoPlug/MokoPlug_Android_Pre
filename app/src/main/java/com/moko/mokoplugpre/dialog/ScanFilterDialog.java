@@ -9,25 +9,20 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * @Date 2020/4/23
- * @Author wenzheng.liu
- * @Description
- * @ClassPath com.moko.mokoplugpre.dialog.ScanFilterDialog
- */
 public class ScanFilterDialog extends BaseDialog {
     public static final String TAG = ScanFilterDialog.class.getSimpleName();
 
-    @BindView(R.id.et_filter_name)
+    @BindView(R2.id.et_filter_name)
     EditText etFilterName;
-    @BindView(R.id.tv_rssi)
+    @BindView(R2.id.tv_rssi)
     TextView tvRssi;
-    @BindView(R.id.sb_rssi)
+    @BindView(R2.id.sb_rssi)
     SeekBar sbRssi;
 
     private int filterRssi;
@@ -100,17 +95,15 @@ public class ScanFilterDialog extends BaseDialog {
         super.onDestroyView();
     }
 
-    @OnClick({R.id.iv_filter_delete, R.id.tv_done})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.iv_filter_delete:
-                etFilterName.setText("");
-                break;
-            case R.id.tv_done:
-                listener.onDone(etFilterName.getText().toString(), filterRssi);
-                dismiss();
-                break;
-        }
+    @OnClick(R2.id.iv_filter_delete)
+    public void onFilterDelete(View view) {
+        etFilterName.setText("");
+    }
+
+    @OnClick(R2.id.tv_done)
+    public void onDone(View view) {
+        listener.onDone(etFilterName.getText().toString(), filterRssi);
+        dismiss();
     }
 
     private OnScanFilterListener listener;

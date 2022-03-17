@@ -28,6 +28,7 @@ import com.moko.mokoplugpre.AppConstants;
 import com.moko.mokoplugpre.BuildConfig;
 import com.moko.mokoplugpre.PlugInfoParseableImpl;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.adapter.PlugListAdapter;
 import com.moko.mokoplugpre.dialog.AlertMessageDialog;
 import com.moko.mokoplugpre.dialog.LoadingDialog;
@@ -57,23 +58,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemClickListener {
 
 
-    @BindView(R.id.rv_devices)
+    @BindView(R2.id.rv_devices)
     RecyclerView rvDevices;
-    @BindView(R.id.iv_refresh)
+    @BindView(R2.id.iv_refresh)
     ImageView ivRefresh;
-    @BindView(R.id.tv_device_num)
+    @BindView(R2.id.tv_device_num)
     TextView tvDeviceNum;
-    @BindView(R.id.tv_filter)
+    @BindView(R2.id.tv_filter)
     TextView tvFilter;
-    @BindView(R.id.rl_filter)
+    @BindView(R2.id.rl_filter)
     RelativeLayout rlFilter;
-    @BindView(R.id.rl_edit_filter)
+    @BindView(R2.id.rl_edit_filter)
     RelativeLayout rlEditFilter;
     private boolean mReceiverTag = false;
     private ConcurrentHashMap<String, PlugInfo> plugInfoHashMap;
@@ -88,7 +88,7 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_pre);
         ButterKnife.bind(this);
         // 初始化Xlog
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -352,93 +352,95 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
     public String filterName;
     public int filterRssi = -100;
 
-
-    @OnClick({R.id.iv_refresh, R.id.iv_about, R.id.rl_edit_filter, R.id.rl_filter, R.id.iv_filter_delete})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.iv_refresh:
-                if (isWindowLocked())
-                    return;
-                if (!MokoSupport.getInstance().isBluetoothOpen()) {
-                    // 蓝牙未打开，开启蓝牙
-                    MokoSupport.getInstance().enableBluetooth();
-                    return;
-                }
-                if (animation == null) {
-                    startScan();
-                } else {
-                    mHandler.removeMessages(0);
-                    mokoBleScanner.stopScanDevice();
-                }
-                break;
-            case R.id.iv_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                break;
-            case R.id.rl_edit_filter:
-            case R.id.rl_filter:
-                if (animation != null) {
-                    mHandler.removeMessages(0);
-                    mokoBleScanner.stopScanDevice();
-                }
-                ScanFilterDialog scanFilterDialog = new ScanFilterDialog();
-                scanFilterDialog.setFilterName(filterName);
-                scanFilterDialog.setFilterRssi(filterRssi);
-                scanFilterDialog.setOnScanFilterListener(new ScanFilterDialog.OnScanFilterListener() {
-                    @Override
-                    public void onDone(String filterName, int filterRssi) {
-                        PreMainActivity.this.filterName = filterName;
-                        PreMainActivity.this.filterRssi = filterRssi;
-                        if (!TextUtils.isEmpty(filterName) || filterRssi != -100) {
-                            rlFilter.setVisibility(View.VISIBLE);
-                            rlEditFilter.setVisibility(View.GONE);
-                            StringBuilder stringBuilder = new StringBuilder();
-                            if (!TextUtils.isEmpty(filterName)) {
-                                stringBuilder.append(filterName);
-                                stringBuilder.append(";");
-                            }
-                            if (filterRssi != -100) {
-                                stringBuilder.append(String.format("%sdBm", filterRssi + ""));
-                                stringBuilder.append(";");
-                            }
-                            tvFilter.setText(stringBuilder.toString());
-                        } else {
-                            rlFilter.setVisibility(View.GONE);
-                            rlEditFilter.setVisibility(View.VISIBLE);
-                        }
-                        if (isWindowLocked())
-                            return;
-                        if (animation == null) {
-                            startScan();
-                        }
-                    }
-
-                    @Override
-                    public void onDismiss() {
-                        if (isWindowLocked())
-                            return;
-                        if (animation == null) {
-                            startScan();
-                        }
-                    }
-                });
-                scanFilterDialog.show(getSupportFragmentManager());
-                break;
-            case R.id.iv_filter_delete:
-                if (animation != null) {
-                    mHandler.removeMessages(0);
-                    mokoBleScanner.stopScanDevice();
-                }
-                rlFilter.setVisibility(View.GONE);
-                rlEditFilter.setVisibility(View.VISIBLE);
-                filterName = "";
-                filterRssi = -100;
-                if (isWindowLocked())
-                    return;
-                if (animation == null) {
-                    startScan();
-                }
-                break;
+    public void onRefresh(View view) {
+        if (isWindowLocked())
+            return;
+        if (!MokoSupport.getInstance().isBluetoothOpen()) {
+            // 蓝牙未打开，开启蓝牙
+            MokoSupport.getInstance().enableBluetooth();
+            return;
         }
+        if (animation == null) {
+            startScan();
+        } else {
+            mHandler.removeMessages(0);
+            mokoBleScanner.stopScanDevice();
+        }
+    }
+
+    public void onAbout(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, AboutActivity.class));
+    }
+
+    public void onFilterDelete(View view) {
+        if (isWindowLocked())
+            return;
+        if (animation != null) {
+            mHandler.removeMessages(0);
+            mokoBleScanner.stopScanDevice();
+        }
+        rlFilter.setVisibility(View.GONE);
+        rlEditFilter.setVisibility(View.VISIBLE);
+        filterName = "";
+        filterRssi = -100;
+        if (isWindowLocked())
+            return;
+        if (animation == null) {
+            startScan();
+        }
+    }
+
+    public void onFilter(View view) {
+        if (isWindowLocked())
+            return;
+        if (animation != null) {
+            mHandler.removeMessages(0);
+            mokoBleScanner.stopScanDevice();
+        }
+        ScanFilterDialog scanFilterDialog = new ScanFilterDialog();
+        scanFilterDialog.setFilterName(filterName);
+        scanFilterDialog.setFilterRssi(filterRssi);
+        scanFilterDialog.setOnScanFilterListener(new ScanFilterDialog.OnScanFilterListener() {
+            @Override
+            public void onDone(String filterName, int filterRssi) {
+                PreMainActivity.this.filterName = filterName;
+                PreMainActivity.this.filterRssi = filterRssi;
+                if (!TextUtils.isEmpty(filterName) || filterRssi != -100) {
+                    rlFilter.setVisibility(View.VISIBLE);
+                    rlEditFilter.setVisibility(View.GONE);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    if (!TextUtils.isEmpty(filterName)) {
+                        stringBuilder.append(filterName);
+                        stringBuilder.append(";");
+                    }
+                    if (filterRssi != -100) {
+                        stringBuilder.append(String.format("%sdBm", filterRssi + ""));
+                        stringBuilder.append(";");
+                    }
+                    tvFilter.setText(stringBuilder.toString());
+                } else {
+                    rlFilter.setVisibility(View.GONE);
+                    rlEditFilter.setVisibility(View.VISIBLE);
+                }
+                if (isWindowLocked())
+                    return;
+                if (animation == null) {
+                    startScan();
+                }
+            }
+
+            @Override
+            public void onDismiss() {
+                if (isWindowLocked())
+                    return;
+                if (animation == null) {
+                    startScan();
+                }
+            }
+        });
+        scanFilterDialog.show(getSupportFragmentManager());
     }
 
     @Override
@@ -493,14 +495,21 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
 
     @Override
     public void onBackPressed() {
-        AlertMessageDialog dialog = new AlertMessageDialog();
-        dialog.setMessage(R.string.main_exit_tips);
-        dialog.setOnAlertConfirmListener(new AlertMessageDialog.OnAlertConfirmListener() {
-            @Override
-            public void onClick() {
-                PreMainActivity.this.finish();
-            }
-        });
-        dialog.show(getSupportFragmentManager());
+        back();
+    }
+
+    private void back() {
+        if (animation != null) {
+            mHandler.removeMessages(0);
+            mokoBleScanner.stopScanDevice();
+        }
+        if (BuildConfig.IS_LIBRARY) {
+            finish();
+        } else {
+            AlertMessageDialog dialog = new AlertMessageDialog();
+            dialog.setMessage(R.string.main_exit_tips);
+            dialog.setOnAlertConfirmListener(() -> PreMainActivity.this.finish());
+            dialog.show(getSupportFragmentManager());
+        }
     }
 }

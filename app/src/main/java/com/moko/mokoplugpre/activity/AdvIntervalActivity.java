@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -28,11 +29,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AdvIntervalActivity extends BaseActivity {
 
-    @BindView(R.id.et_adv_interval)
+    @BindView(R2.id.et_adv_interval)
     EditText etAdvInterval;
     private boolean mReceiverTag = false;
 
@@ -128,27 +128,27 @@ public class AdvIntervalActivity extends BaseActivity {
         }
     };
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                finish();
-                break;
-            case R.id.tv_confirm:
-                String advInterval = etAdvInterval.getText().toString();
-                if (TextUtils.isEmpty(advInterval)) {
-                    ToastUtils.showToast(this, "can't be blank");
-                    return;
-                }
-                int interval = Integer.parseInt(advInterval);
-                if (interval < 1 || interval > 100) {
-                    ToastUtils.showToast(this, "the range is 1~100");
-                    return;
-                }
-                showSyncingProgressDialog();
-                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeAdvInterval(interval));
-                break;
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        finish();
+    }
+
+    public void onConfirm(View view) {
+        if (isWindowLocked())
+            return;
+        String advInterval = etAdvInterval.getText().toString();
+        if (TextUtils.isEmpty(advInterval)) {
+            ToastUtils.showToast(this, "can't be blank");
+            return;
         }
+        int interval = Integer.parseInt(advInterval);
+        if (interval < 1 || interval > 100) {
+            ToastUtils.showToast(this, "the range is 1~100");
+            return;
+        }
+        showSyncingProgressDialog();
+        MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeAdvInterval(interval));
     }
 
     @Override

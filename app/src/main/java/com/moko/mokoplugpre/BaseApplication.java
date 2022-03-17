@@ -16,7 +16,6 @@ import com.elvishew.xlog.printer.file.FilePrinter;
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator;
 import com.moko.ble.lib.log.ClearLogBackStrategy;
 import com.moko.mokoplugpre.utils.IOUtils;
-import com.moko.support.pre.MokoSupport;
 
 import java.io.File;
 import java.io.PrintWriter;

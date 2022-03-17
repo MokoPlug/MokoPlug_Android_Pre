@@ -13,6 +13,7 @@ import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.activity.DeviceInfoActivity;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.mokoplugpre.view.ArcProgress;
@@ -27,20 +28,19 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class PowerFragment extends Fragment {
 
     private static final String TAG = PowerFragment.class.getSimpleName();
-    @BindView(R.id.arc_progress)
+    @BindView(R2.id.arc_progress)
     ArcProgress arcProgress;
-    @BindView(R.id.tv_power)
+    @BindView(R2.id.tv_power)
     TextView tvPower;
-    @BindView(R.id.tv_onoff)
+    @BindView(R2.id.tv_onoff)
     TextView tvOnoff;
-    @BindView(R.id.cv_onoff)
+    @BindView(R2.id.cv_onoff)
     CardView cvOnoff;
-    @BindView(R.id.tv_overload)
+    @BindView(R2.id.tv_overload)
     TextView tvOverload;
     private boolean switchState = false;
     private DeviceInfoActivity activity;
@@ -161,28 +161,8 @@ public class PowerFragment extends Fragment {
         super.onDestroy();
     }
 
-//    int electricityP = 0;
-
-    @OnClick({R.id.arc_progress, R.id.cv_onoff})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.arc_progress:
-                // TODO: 2020/4/24 测试
-//                electricityP += 8;
-//                float progress = electricityP * 0.1f;
-//                arcProgress.setProgress(progress);
-//                tvPower.setText(String.valueOf(electricityP));
-                break;
-            case R.id.cv_onoff:
-                switchState = !switchState;
-                activity.changeSwitchState(switchState);
-                break;
-        }
+    public void changeSwitchState() {
+        switchState = !switchState;
+        activity.changeSwitchState(switchState);
     }
-
-//    public void changePowerState() {
-//        MokoSupport.getInstance().switchState = switchState ? 1 : 0;
-//        int onoff = switchState ? 1 : 0;
-//        setOnOff(onoff);
-//    }
 }

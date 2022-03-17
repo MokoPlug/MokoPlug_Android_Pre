@@ -20,7 +20,9 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.mokoplugpre.AppConstants;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.AlertMessageDialog;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.fragment.EnergyFragment;
@@ -39,23 +41,22 @@ import org.greenrobot.eventbus.ThreadMode;
 import androidx.annotation.IdRes;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
-    @BindView(R.id.frame_container)
+    @BindView(R2.id.frame_container)
     FrameLayout frameContainer;
-    @BindView(R.id.tv_title)
+    @BindView(R2.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.radioBtn_power)
+    @BindView(R2.id.radioBtn_power)
     RadioButton radioBtnPower;
-    @BindView(R.id.radioBtn_energy)
+    @BindView(R2.id.radioBtn_energy)
     RadioButton radioBtnEnergy;
-    @BindView(R.id.radioBtn_timer)
+    @BindView(R2.id.radioBtn_timer)
     RadioButton radioBtnTimer;
-    @BindView(R.id.radioBtn_setting)
+    @BindView(R2.id.radioBtn_setting)
     RadioButton radioBtnSetting;
-    @BindView(R.id.rg_options)
+    @BindView(R2.id.rg_options)
     RadioGroup rgOptions;
     private FragmentManager fragmentManager;
     private PowerFragment powerFragment;
@@ -196,16 +197,16 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             mLoadingMessageDialog.dismissAllowingStateLoss();
     }
 
-    @OnClick({R.id.tv_back, R.id.iv_more})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                back();
-                break;
-            case R.id.iv_more:
-                startActivity(new Intent(this, MoreActivity.class));
-                break;
-        }
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        back();
+    }
+
+    public void onMore(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, MoreActivity.class));
     }
 
     private void back() {
@@ -234,45 +235,46 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
 
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-        switch (checkedId) {
-            case R.id.radioBtn_power:
-                fragmentManager.beginTransaction()
-                        .show(powerFragment)
-                        .hide(energyFragment)
-                        .hide(timerFragment)
-                        .hide(settingFragment)
-                        .commit();
-                break;
-            case R.id.radioBtn_energy:
-                fragmentManager.beginTransaction()
-                        .hide(powerFragment)
-                        .show(energyFragment)
-                        .hide(timerFragment)
-                        .hide(settingFragment)
-                        .commit();
-                break;
-            case R.id.radioBtn_timer:
-                fragmentManager.beginTransaction()
-                        .hide(powerFragment)
-                        .hide(energyFragment)
-                        .show(timerFragment)
-                        .hide(settingFragment)
-                        .commit();
-                break;
-            case R.id.radioBtn_setting:
-                fragmentManager.beginTransaction()
-                        .hide(powerFragment)
-                        .hide(energyFragment)
-                        .hide(timerFragment)
-                        .show(settingFragment)
-                        .commit();
-                break;
+        if (checkedId == R.id.radioBtn_power) {
+            fragmentManager.beginTransaction()
+                    .show(powerFragment)
+                    .hide(energyFragment)
+                    .hide(timerFragment)
+                    .hide(settingFragment)
+                    .commit();
+        } else if (checkedId == R.id.radioBtn_energy) {
+            fragmentManager.beginTransaction()
+                    .hide(powerFragment)
+                    .show(energyFragment)
+                    .hide(timerFragment)
+                    .hide(settingFragment)
+                    .commit();
+        } else if (checkedId == R.id.radioBtn_timer) {
+            fragmentManager.beginTransaction()
+                    .hide(powerFragment)
+                    .hide(energyFragment)
+                    .show(timerFragment)
+                    .hide(settingFragment)
+                    .commit();
+        } else if (checkedId == R.id.radioBtn_setting) {
+            fragmentManager.beginTransaction()
+                    .hide(powerFragment)
+                    .hide(energyFragment)
+                    .hide(timerFragment)
+                    .show(settingFragment)
+                    .commit();
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Power
     ///////////////////////////////////////////////////////////////////////////
+
+    public void onOnOff(View view) {
+        if (isWindowLocked())
+            return;
+        powerFragment.changeSwitchState();
+    }
 
     public void changeSwitchState(boolean switchState) {
         showSyncingProgressDialog();
@@ -283,6 +285,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     ///////////////////////////////////////////////////////////////////////////
     // Timer
     ///////////////////////////////////////////////////////////////////////////
+    public void onTimer(View view) {
+        if (isWindowLocked())
+            return;
+        timerFragment.setTimer();
+    }
 
     public void setTimer(int countdown) {
         showSyncingProgressDialog();
@@ -293,8 +300,67 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     ///////////////////////////////////////////////////////////////////////////
     // Setting
     ///////////////////////////////////////////////////////////////////////////
+    public void changeName() {
+        tvTitle.setText(MokoSupport.getInstance().advName);
+    }
 
-    public void resetEnergyConsumption() {
+
+    public void onModifyName(View view) {
+        if (isWindowLocked())
+            return;
+        startActivityForResult(new Intent(this, ModifyNameActivity.class), AppConstants.REQUEST_CODE_MODIFY_NAME);
+    }
+
+    public void onModifyPowerStatus(View view) {
+        if (isWindowLocked())
+            return;
+        // 修改上电状态
+        startActivityForResult(new Intent(this, ModifyPowerStatusActivity.class), AppConstants.REQUEST_CODE_MODIFY_POWER_STATUS);
+
+    }
+
+    public void onCheckUpdate(View view) {
+        if (isWindowLocked())
+            return;
+        // 升级
+        startActivityForResult(new Intent(this, FirmwareUpdateActivity.class), AppConstants.REQUEST_CODE_UPDATE);
+
+    }
+
+    public void onModifyAdvInterval(View view) {
+        if (isWindowLocked())
+            return;
+        // 修改广播间隔
+        startActivityForResult(new Intent(this, AdvIntervalActivity.class), AppConstants.REQUEST_CODE_ADV_INTERVAL);
+
+    }
+
+    public void onModifyOverloadValue(View view) {
+        if (isWindowLocked())
+            return;
+        // 修改过载保护值
+        startActivityForResult(new Intent(this, OverloadValueActivity.class), AppConstants.REQUEST_CODE_OVERLOAD_VALUE);
+
+    }
+
+    public void onModifyPowerReportInterval(View view) {
+        if (isWindowLocked())
+            return;
+        // 修改电能上报间隔
+        startActivityForResult(new Intent(this, EnergySavedIntervalActivity.class), AppConstants.REQUEST_CODE_ENERGY_SAVED_INTERVAL);
+    }
+
+    public void onModifyPowerChangeNotification(View view) {
+        if (isWindowLocked())
+            return;
+        // 修改电能变化百分比
+        startActivityForResult(new Intent(this, EnergySavedPercentActivity.class), AppConstants.REQUEST_CODE_ENERGY_SAVED_PERCENT);
+    }
+
+    public void onModifyEnergyConsumption(View view) {
+        if (isWindowLocked())
+            return;
+        // 重置累计电能
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Reset Energy Consumption");
         dialog.setMessage("Please confirm again whether to reset the accumulated electricity? Value will be recounted after clearing.");
@@ -309,7 +375,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         dialog.show(getSupportFragmentManager());
     }
 
-    public void reset() {
+    public void onReset(View view) {
+        if (isWindowLocked())
+            return;
         AlertMessageDialog dialog = new AlertMessageDialog();
         dialog.setTitle("Reset Device");
         dialog.setMessage("After reset,the relevant data will be totally cleared");
@@ -324,7 +392,44 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         dialog.show(getSupportFragmentManager());
     }
 
-    public void changeName() {
-        tvTitle.setText(MokoSupport.getInstance().advName);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppConstants.REQUEST_CODE_MODIFY_NAME) {
+            if (resultCode == RESULT_OK) {
+                final String deviceName = MokoSupport.getInstance().advName;
+                settingFragment.setDeviceName(deviceName);
+                changeName();
+            }
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_ADV_INTERVAL) {
+            if (resultCode == RESULT_OK) {
+                final int advInterval = MokoSupport.getInstance().advInterval;
+                settingFragment.setAdvInterval(advInterval);
+            }
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_OVERLOAD_VALUE) {
+            if (resultCode == RESULT_OK) {
+                final int overloadTopValue = MokoSupport.getInstance().overloadTopValue;
+                settingFragment.setOverloadTopValue(overloadTopValue);
+            }
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_ENERGY_SAVED_INTERVAL) {
+            if (resultCode == RESULT_OK) {
+                final int energySavedInterval = MokoSupport.getInstance().energySavedInterval;
+                settingFragment.setEnergySavedInterval(energySavedInterval);
+            }
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_ENERGY_SAVED_PERCENT) {
+            if (resultCode == RESULT_OK) {
+                final int energySavedPercent = MokoSupport.getInstance().energySavedPercent;
+                settingFragment.setEnergySavedPercent(energySavedPercent);
+            }
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_UPDATE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
     }
 }

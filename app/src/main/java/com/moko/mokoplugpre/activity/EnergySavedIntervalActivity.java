@@ -15,6 +15,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -28,11 +29,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class EnergySavedIntervalActivity extends BaseActivity {
 
-    @BindView(R.id.et_energy_saved_interval)
+    @BindView(R2.id.et_energy_saved_interval)
     EditText etEnergySavedInterval;
     private boolean mReceiverTag = false;
 
@@ -129,28 +129,28 @@ public class EnergySavedIntervalActivity extends BaseActivity {
         }
     };
 
-    @OnClick({R.id.tv_back, R.id.tv_confirm})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.tv_back:
-                finish();
-                break;
-            case R.id.tv_confirm:
-                String energySavedInterval = etEnergySavedInterval.getText().toString();
-                if (TextUtils.isEmpty(energySavedInterval)) {
-                    ToastUtils.showToast(this, "can't be blank");
-                    return;
-                }
-                int interval = Integer.parseInt(energySavedInterval);
-                if (interval < 1 || interval > 60) {
-                    ToastUtils.showToast(this, "the range is 1~60");
-                    return;
-                }
-                showSyncingProgressDialog();
-                int energySavedPercent = MokoSupport.getInstance().energySavedPercent;
-                MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeEnergySavedParams(interval, energySavedPercent));
-                break;
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        finish();
+    }
+
+    public void onConfirm(View view) {
+        if (isWindowLocked())
+            return;
+        String energySavedInterval = etEnergySavedInterval.getText().toString();
+        if (TextUtils.isEmpty(energySavedInterval)) {
+            ToastUtils.showToast(this, "can't be blank");
+            return;
         }
+        int interval = Integer.parseInt(energySavedInterval);
+        if (interval < 1 || interval > 60) {
+            ToastUtils.showToast(this, "the range is 1~60");
+            return;
+        }
+        showSyncingProgressDialog();
+        int energySavedPercent = MokoSupport.getInstance().energySavedPercent;
+        MokoSupport.getInstance().sendOrder(OrderTaskAssembler.writeEnergySavedParams(interval, energySavedPercent));
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
+import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.activity.DeviceInfoActivity;
 import com.moko.mokoplugpre.dialog.TimerDialog;
 import com.moko.mokoplugpre.view.CircularProgress;
@@ -24,16 +25,15 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class TimerFragment extends Fragment {
 
     private static final String TAG = TimerFragment.class.getSimpleName();
-    @BindView(R.id.circular_progress)
+    @BindView(R2.id.circular_progress)
     CircularProgress circularProgress;
-    @BindView(R.id.tv_countdown_tips)
+    @BindView(R2.id.tv_countdown_tips)
     TextView tvCountdownTips;
-    @BindView(R.id.tv_timer)
+    @BindView(R2.id.tv_timer)
     TextView tvTimer;
 
     private DeviceInfoActivity activity;
@@ -135,53 +135,22 @@ public class TimerFragment extends Fragment {
         super.onDestroy();
     }
 
-    //    int countdown = 0;
-//    int count = 0;
     final float maxProgress = 36.0f;
 
-    @OnClick({R.id.circular_progress, R.id.cv_timer})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.circular_progress:
-                // TODO: 2020/4/24 测试
-//                countdown += 1;
-//                circularProgress.setProgress(countdown);
-                break;
-            case R.id.cv_timer:
-                // 设置倒计时
-//                countdown = 300;
-//                count = countdown;
-//                countdown();
-                int onoff = MokoSupport.getInstance().switchState;
-                TimerDialog timerDialog = new TimerDialog();
-                timerDialog.setOnoff(onoff == 1);
-                timerDialog.setListener(new TimerDialog.TimerListener() {
-                    @Override
-                    public void onConfirmClick(TimerDialog dialog) {
-                        int hour = dialog.getWvHour();
-                        int minute = dialog.getWvMinute();
-                        int countdown = hour * 3600 + minute * 60;
-                        activity.setTimer(countdown);
-                        dialog.dismiss();
-                    }
-                });
-                timerDialog.show(activity.getSupportFragmentManager());
-                break;
-        }
+    public void setTimer() {
+        int onoff = MokoSupport.getInstance().switchState;
+        TimerDialog timerDialog = new TimerDialog();
+        timerDialog.setOnoff(onoff == 1);
+        timerDialog.setListener(new TimerDialog.TimerListener() {
+            @Override
+            public void onConfirmClick(TimerDialog dialog) {
+                int hour = dialog.getWvHour();
+                int minute = dialog.getWvMinute();
+                int countdown = hour * 3600 + minute * 60;
+                activity.setTimer(countdown);
+                dialog.dismiss();
+            }
+        });
+        timerDialog.show(activity.getSupportFragmentManager());
     }
-
-//    private void countdown() {
-//        tvTimer.setText(String.valueOf(countdown));
-//        int progress = Math.round(maxProgress - maxProgress / count * countdown);
-//        circularProgress.setProgress(progress);
-//        if (countdown <= 0)
-//            return;
-//        tvTimer.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                countdown--;
-//                countdown();
-//            }
-//        }, 1000);
-//    }
 }
