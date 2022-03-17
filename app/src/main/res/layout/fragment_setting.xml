@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_f5f5f5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="General settings"
+            android:textColor="@color/grey_808080"
+            android:textSize="14sp" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_modify_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Modify device name"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_modify_power_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Modify power on status"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_power_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_check_update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check update"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Advanced settings"
+            android:textColor="@color/grey_808080"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:id="@+id/rl_adv_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Broadcast frequency(100ms)"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_adv_interval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_overload_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Overload value(W)"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_overload_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_power_report_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Power report interval(min)"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_energy_saved_interval"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_power_change_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Power change notification(%)"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_energy_saved_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_energy_consumption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:background="@color/white_ffffff"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Energy consumption(KWh)"
+                android:textColor="@color/black_333333"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_energy_consumption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableRight="@drawable/right_arrow"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/grey_808080"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_reset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/white_ffffff"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="Reset device"
+            android:textColor="@color/grey_808080"
+            android:textSize="16sp" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MokoPlugPre</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="version_info">V %s</string>
+    <string name="about_moko_name">MOKO TECHNOLOGY LTD.</string>
+    <string name="company_website">www.mokosmart.com</string>
+
+    <string name="permission_storage_close_title">Storage permission is not available</string>
+    <string name="permission_storage_close_content">Please find it in cellphone setting- permission, and allow MokoPlugPre use the Storage permission</string>
+    <string name="permission_open">OK</string>
+    <string name="permission_storage_need_title">Please turn on Storage permissions</string>
+    <string name="permission_storage_need_content">MokoPlugPre requires access to Location and Storage permission. If the permissions are not on, MokoPlugPre cannot be used normally.</string>
+    <string name="location_need_title">Turn on Location permission</string>
+    <string name="location_need_content">After that, MokoPlugPre could search and connect with the MokoPlugPre</string>
+    <string name="permission_location_close_title">Location persission is not available</string>
+    <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow MokoPlugPre use the Location and Storage permission</string>
+    <string name="permission_location_need_title">Turn on Location permission</string>
+    <string name="permission_location_need_content">After that, MokoPlugPre could search and connect with the MokoPlugPre</string>
+
+    <string name="main_exit_tips">Are you sure you want to quit?</string>
+    <string name="setting_syncing">syncing</string>
+    <string name="countdown_tips">%s after countdown</string>
+    <string name="countdown_timer_on">Countdown timer (on)</string>
+    <string name="countdown_timer_off">Countdown timer (off)</string>
+    <string name="modify_device_name_empty">Device name can\'t be blank</string>
+    <string name="success">Success</string>
+    <string name="timeout">Timeout</string>
+    <string name="failed">Failed</string>
+
+</resources>
