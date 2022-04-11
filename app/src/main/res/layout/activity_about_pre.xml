@@ -53,14 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:src="@drawable/ic_logo" />
+                android:src="@drawable/ic_114_pre" />
 
             <TextView
                 android:id="@+id/tv_soft_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="V 1.0.0"
+                android:text="V 1.0.1"
                 android:textSize="15sp" />
 
             <LinearLayout

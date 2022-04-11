@@ -84,6 +84,7 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
     private MokoBleScanner mokoBleScanner;
 
     public static String PATH_LOGCAT;
+    private int mDeviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
             PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MokoPlug" : "MokoPlugPre");
         }
         MokoSupport.getInstance().init(getApplicationContext());
+        mDeviceType = getIntent().getIntExtra("deviceType", 0);
         plugInfoHashMap = new ConcurrentHashMap<>();
         plugInfos = new ArrayList<>();
         adapter = new PlugListAdapter();
@@ -371,7 +373,10 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
     public void onAbout(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, AboutActivity.class));
+
+        Intent intent = new Intent(this, AboutActivity.class);
+        intent.putExtra("deviceType", mDeviceType);
+        startActivity(intent);
     }
 
     public void onFilterDelete(View view) {
@@ -493,6 +498,12 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
             mLoadingMessageDialog.dismissAllowingStateLoss();
     }
 
+    public void onBack(View view) {
+        if (isWindowLocked())
+            return;
+        back();
+    }
+
     @Override
     public void onBackPressed() {
         back();
@@ -512,4 +523,5 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
             dialog.show(getSupportFragmentManager());
         }
     }
+
 }
