@@ -2,42 +2,32 @@ package com.moko.mokoplugpre.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.moko.mokoplugpre.BuildConfig;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityAboutPreBinding;
 import com.moko.mokoplugpre.utils.Utils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-
-public class AboutActivity extends BaseActivity {
-
-    @BindView(R2.id.tv_soft_version)
-    TextView tvSoftVersion;
-    @BindView(R2.id.iv_logo)
-    ImageView ivLogo;
-
+public class AboutActivity extends BaseActivity<ActivityAboutPreBinding> {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_pre);
-        ButterKnife.bind(this);
+    protected void onCreate() {
         int deviceType = getIntent().getIntExtra("deviceType", 0);
         if (deviceType == 1) {
-            ivLogo.setImageResource(R.drawable.ic_115_pre);
+            mBind.ivLogo.setImageResource(R.drawable.ic_115_pre);
         }
         if (deviceType == 2) {
-            ivLogo.setImageResource(R.drawable.ic_116_pre);
+            mBind.ivLogo.setImageResource(R.drawable.ic_116_pre);
         }
         if (!BuildConfig.IS_LIBRARY) {
-            tvSoftVersion.setText(String.format(getString(R.string.version_info), Utils.getVersionInfo(this)));
+            mBind.tvSoftVersion.setText(String.format(getString(R.string.version_info), Utils.getVersionInfo(this)));
         }
+    }
+
+    @Override
+    protected ActivityAboutPreBinding getViewBinding() {
+        return ActivityAboutPreBinding.inflate(getLayoutInflater());
     }
 
     public void openURL(View view) {

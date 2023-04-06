@@ -7,16 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.activity.DeviceInfoActivity;
+import com.moko.mokoplugpre.databinding.FragmentPowerBinding;
 import com.moko.mokoplugpre.utils.ToastUtils;
-import com.moko.mokoplugpre.view.ArcProgress;
 import com.moko.support.pre.MokoSupport;
 import com.moko.support.pre.entity.OrderCHAR;
 
@@ -24,24 +22,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class PowerFragment extends Fragment {
 
     private static final String TAG = PowerFragment.class.getSimpleName();
-    @BindView(R2.id.arc_progress)
-    ArcProgress arcProgress;
-    @BindView(R2.id.tv_power)
-    TextView tvPower;
-    @BindView(R2.id.tv_onoff)
-    TextView tvOnoff;
-    @BindView(R2.id.cv_onoff)
-    CardView cvOnoff;
-    @BindView(R2.id.tv_overload)
-    TextView tvOverload;
+    private FragmentPowerBinding mBind;
     private boolean switchState = false;
     private DeviceInfoActivity activity;
 
@@ -76,8 +62,8 @@ public class PowerFragment extends Fragment {
                     case MokoSupport.NOTIFY_FUNCTION_ELECTRICITY:
                         String electricityP = MokoSupport.getInstance().electricityP;
                         float progress = Math.abs(Float.parseFloat(electricityP)) * 0.1f;
-                        arcProgress.setProgress(progress);
-                        tvPower.setText(electricityP);
+                        mBind.arcProgress.setProgress(progress);
+                        mBind.tvPower.setText(electricityP);
                         break;
                 }
             }
@@ -87,23 +73,23 @@ public class PowerFragment extends Fragment {
     private void setOnOff(int onoff) {
         if (onoff == 0) {
             switchState = false;
-            cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
-            tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_2681ff));
-            tvOnoff.setText("OFF");
+            mBind.cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
+            mBind.tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.blue_2681ff));
+            mBind.tvOnoff.setText("OFF");
         } else {
             switchState = true;
-            cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_2681ff));
-            tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
-            tvOnoff.setText("ON");
+            mBind.cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_2681ff));
+            mBind.tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
+            mBind.tvOnoff.setText("ON");
         }
     }
 
     private void setOverLoad() {
-        cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey_d9d9d9));
-        tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
-        tvOnoff.setText("OFF");
-        cvOnoff.setEnabled(false);
-        tvOverload.setVisibility(View.VISIBLE);
+        mBind.cvOnoff.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey_d9d9d9));
+        mBind.tvOnoff.setTextColor(ContextCompat.getColor(getActivity(), R.color.white_ffffff));
+        mBind.tvOnoff.setText("OFF");
+        mBind.cvOnoff.setEnabled(false);
+        mBind.tvOverload.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -116,8 +102,7 @@ public class PowerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        View view = inflater.inflate(R.layout.fragment_power, container, false);
-        ButterKnife.bind(this, view);
+        mBind = FragmentPowerBinding.inflate(inflater, container, false);
         int onoff = MokoSupport.getInstance().switchState;
         int overloadState = MokoSupport.getInstance().overloadState;
         if (overloadState == 0) {
@@ -128,12 +113,12 @@ public class PowerFragment extends Fragment {
         String electricityP = MokoSupport.getInstance().electricityP;
         if (!TextUtils.isEmpty(electricityP)) {
             float progress = Math.abs(Float.parseFloat(electricityP)) * 0.1f;
-            arcProgress.setProgress(progress);
-            tvPower.setText(electricityP);
+            mBind.arcProgress.setProgress(progress);
+            mBind.tvPower.setText(electricityP);
         }
         activity = (DeviceInfoActivity) getActivity();
         EventBus.getDefault().register(this);
-        return view;
+        return mBind.getRoot();
     }
 
     @Override

@@ -5,17 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityEnergySavedIntervalBinding;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -27,26 +25,17 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class EnergySavedIntervalActivity extends BaseActivity<ActivityEnergySavedIntervalBinding> {
 
-public class EnergySavedIntervalActivity extends BaseActivity {
-
-    @BindView(R2.id.et_energy_saved_interval)
-    EditText etEnergySavedInterval;
     private boolean mReceiverTag = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_energy_saved_interval);
-        ButterKnife.bind(this);
-
+    protected void onCreate() {
         int energySavedInterval = MokoSupport.getInstance().energySavedInterval;
-        etEnergySavedInterval.setText(String.valueOf(energySavedInterval));
-        etEnergySavedInterval.setSelection(String.valueOf(energySavedInterval).length());
+        mBind.etEnergySavedInterval.setText(String.valueOf(energySavedInterval));
+        mBind.etEnergySavedInterval.setSelection(String.valueOf(energySavedInterval).length());
 
-        getFocuable(etEnergySavedInterval);
+        getFocusable(mBind.etEnergySavedInterval);
 
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -54,6 +43,11 @@ public class EnergySavedIntervalActivity extends BaseActivity {
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+    }
+
+    @Override
+    protected ActivityEnergySavedIntervalBinding getViewBinding() {
+        return ActivityEnergySavedIntervalBinding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -95,7 +89,7 @@ public class EnergySavedIntervalActivity extends BaseActivity {
                         switch (configKeyEnum) {
                             case SET_ENERGY_SAVED_PARAMS:
                                 if (0 == (value[3] & 0xFF)) {
-                                    MokoSupport.getInstance().energySavedInterval = Integer.parseInt(etEnergySavedInterval.getText().toString());
+                                    MokoSupport.getInstance().energySavedInterval = Integer.parseInt(mBind.etEnergySavedInterval.getText().toString());
                                     ToastUtils.showToast(EnergySavedIntervalActivity.this, R.string.success);
                                     EnergySavedIntervalActivity.this.setResult(EnergySavedIntervalActivity.this.RESULT_OK);
                                     finish();
@@ -138,7 +132,7 @@ public class EnergySavedIntervalActivity extends BaseActivity {
     public void onConfirm(View view) {
         if (isWindowLocked())
             return;
-        String energySavedInterval = etEnergySavedInterval.getText().toString();
+        String energySavedInterval = mBind.etEnergySavedInterval.getText().toString();
         if (TextUtils.isEmpty(energySavedInterval)) {
             ToastUtils.showToast(this, "can't be blank");
             return;

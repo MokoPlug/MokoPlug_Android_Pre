@@ -5,17 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityEnergySavedPercentBinding;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -27,27 +25,18 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class EnergySavedPercentActivity extends BaseActivity<ActivityEnergySavedPercentBinding> {
 
-public class EnergySavedPercentActivity extends BaseActivity {
-
-
-    @BindView(R2.id.et_energy_saved_percent)
-    EditText etEnergySavedPercent;
     private boolean mReceiverTag = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_energy_saved_percent);
-        ButterKnife.bind(this);
+    protected void onCreate() {
 
         int energySavedPercent = MokoSupport.getInstance().energySavedPercent;
-        etEnergySavedPercent.setText(String.valueOf(energySavedPercent));
-        etEnergySavedPercent.setSelection(String.valueOf(energySavedPercent).length());
+        mBind.etEnergySavedPercent.setText(String.valueOf(energySavedPercent));
+        mBind.etEnergySavedPercent.setSelection(String.valueOf(energySavedPercent).length());
 
-        getFocuable(etEnergySavedPercent);
+        getFocusable(mBind.etEnergySavedPercent);
 
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -55,6 +44,11 @@ public class EnergySavedPercentActivity extends BaseActivity {
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+    }
+
+    @Override
+    protected ActivityEnergySavedPercentBinding getViewBinding() {
+        return ActivityEnergySavedPercentBinding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -97,7 +91,7 @@ public class EnergySavedPercentActivity extends BaseActivity {
                         switch (configKeyEnum) {
                             case SET_ENERGY_SAVED_PARAMS:
                                 if (0 == (value[3] & 0xFF)) {
-                                    MokoSupport.getInstance().energySavedPercent = Integer.parseInt(etEnergySavedPercent.getText().toString());
+                                    MokoSupport.getInstance().energySavedPercent = Integer.parseInt(mBind.etEnergySavedPercent.getText().toString());
                                     ToastUtils.showToast(EnergySavedPercentActivity.this, R.string.success);
                                     EnergySavedPercentActivity.this.setResult(EnergySavedPercentActivity.this.RESULT_OK);
                                     finish();
@@ -140,7 +134,7 @@ public class EnergySavedPercentActivity extends BaseActivity {
     public void onConfirm(View view) {
         if (isWindowLocked())
             return;
-        String energySavedPercent = etEnergySavedPercent.getText().toString();
+        String energySavedPercent = mBind.etEnergySavedPercent.getText().toString();
         if (TextUtils.isEmpty(energySavedPercent)) {
             ToastUtils.showToast(this, "can't be blank");
             return;

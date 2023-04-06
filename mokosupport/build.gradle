@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion '29.0.3'
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -20,15 +20,19 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     api files('libs/mokoBleLib.jar')
-    api 'no.nordicsemi.android.support.v18:scanner:1.4.3'
+    api 'no.nordicsemi.android.support.v18:scanner:1.6.0'
     api 'no.nordicsemi.android:dfu:0.6.2'
     api 'org.greenrobot:eventbus:3.2.0'
     api 'com.elvishew:xlog:1.6.1'
-    implementation 'no.nordicsemi.android:ble:2.4.0'
+    implementation 'no.nordicsemi.android:ble:2.5.1'
 }
 
 //修改jar名字+将指定jar生成的地方

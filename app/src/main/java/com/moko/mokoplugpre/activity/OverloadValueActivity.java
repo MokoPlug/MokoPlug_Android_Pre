@@ -5,17 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityOverloadValueBinding;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -27,26 +25,18 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class OverloadValueActivity extends BaseActivity<ActivityOverloadValueBinding> {
 
-public class OverloadValueActivity extends BaseActivity {
-
-    @BindView(R2.id.et_overload_value)
-    EditText etOverloadValue;
     private boolean mReceiverTag = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_overload_value);
-        ButterKnife.bind(this);
+    protected void onCreate() {
 
         int overloadTopValue = MokoSupport.getInstance().overloadTopValue;
-        etOverloadValue.setText(String.valueOf(overloadTopValue));
-        etOverloadValue.setSelection(String.valueOf(overloadTopValue).length());
+        mBind.etOverloadValue.setText(String.valueOf(overloadTopValue));
+        mBind.etOverloadValue.setSelection(String.valueOf(overloadTopValue).length());
 
-        getFocuable(etOverloadValue);
+        getFocusable(mBind.etOverloadValue);
 
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -54,6 +44,11 @@ public class OverloadValueActivity extends BaseActivity {
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+    }
+
+    @Override
+    protected ActivityOverloadValueBinding getViewBinding() {
+        return ActivityOverloadValueBinding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -95,7 +90,7 @@ public class OverloadValueActivity extends BaseActivity {
                         switch (configKeyEnum) {
                             case SET_OVERLOAD_TOP_VALUE:
                                 if (0 == (value[3] & 0xFF)) {
-                                    MokoSupport.getInstance().overloadTopValue = Integer.parseInt(etOverloadValue.getText().toString());
+                                    MokoSupport.getInstance().overloadTopValue = Integer.parseInt(mBind.etOverloadValue.getText().toString());
                                     ToastUtils.showToast(OverloadValueActivity.this, R.string.success);
                                     OverloadValueActivity.this.setResult(OverloadValueActivity.this.RESULT_OK);
                                     finish();
@@ -138,7 +133,7 @@ public class OverloadValueActivity extends BaseActivity {
     public void onConfirm(View view) {
         if (isWindowLocked())
             return;
-        String overloadValue = etOverloadValue.getText().toString();
+        String overloadValue = mBind.etOverloadValue.getText().toString();
         if (TextUtils.isEmpty(overloadValue)) {
             ToastUtils.showToast(this, "can't be blank");
             return;

@@ -12,15 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elvishew.xlog.XLog;
@@ -31,7 +27,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.AppConstants;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityDeviceInfoBinding;
 import com.moko.mokoplugpre.dialog.AlertMessageDialog;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.fragment.EnergyFragment;
@@ -54,30 +50,14 @@ import java.io.File;
 
 import androidx.annotation.IdRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import no.nordicsemi.android.dfu.DfuProgressListener;
 import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
 import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
-public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
+public class DeviceInfoActivity extends BaseActivity<ActivityDeviceInfoBinding> implements RadioGroup.OnCheckedChangeListener {
     public static final int REQUEST_CODE_SELECT_FIRMWARE = 0x10;
 
-    @BindView(R2.id.frame_container)
-    FrameLayout frameContainer;
-    @BindView(R2.id.tv_title)
-    TextView tvTitle;
-    @BindView(R2.id.radioBtn_power)
-    RadioButton radioBtnPower;
-    @BindView(R2.id.radioBtn_energy)
-    RadioButton radioBtnEnergy;
-    @BindView(R2.id.radioBtn_timer)
-    RadioButton radioBtnTimer;
-    @BindView(R2.id.radioBtn_setting)
-    RadioButton radioBtnSetting;
-    @BindView(R2.id.rg_options)
-    RadioGroup rgOptions;
     private FragmentManager fragmentManager;
     private PowerFragment powerFragment;
     private EnergyFragment energyFragment;
@@ -90,14 +70,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private boolean mReceiverTag = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_info);
-        ButterKnife.bind(this);
+    protected void onCreate() {
         initFragment();
-        rgOptions.setOnCheckedChangeListener(this);
-        radioBtnPower.setChecked(true);
-        tvTitle.setText(MokoSupport.getInstance().advName);
+        mBind.rgOptions.setOnCheckedChangeListener(this);
+        mBind.radioBtnPower.setChecked(true);
+        mBind.tvTitle.setText(MokoSupport.getInstance().advName);
         mDeviceName = MokoSupport.getInstance().advName;
         mDeviceMac = MokoSupport.getInstance().mac;
         EventBus.getDefault().register(this);
@@ -106,6 +83,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+    }
+
+    @Override
+    protected ActivityDeviceInfoBinding getViewBinding() {
+        return ActivityDeviceInfoBinding.inflate(getLayoutInflater());
     }
 
     private void initFragment() {
@@ -325,7 +307,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     // Setting
     ///////////////////////////////////////////////////////////////////////////
     public void changeName() {
-        tvTitle.setText(MokoSupport.getInstance().advName);
+        mBind.tvTitle.setText(MokoSupport.getInstance().advName);
     }
 
 

@@ -5,9 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.moko.ble.lib.MokoConstants;
@@ -15,7 +13,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.ActivityPowerStatusBinding;
 import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.utils.ToastUtils;
 import com.moko.support.pre.MokoSupport;
@@ -27,46 +25,36 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class ModifyPowerStatusActivity extends BaseActivity<ActivityPowerStatusBinding> implements RadioGroup.OnCheckedChangeListener {
 
-public class ModifyPowerStatusActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
-
-    @BindView(R2.id.rb_switch_off)
-    RadioButton rbSwitchOff;
-    @BindView(R2.id.rb_switch_on)
-    RadioButton rbSwitchOn;
-    @BindView(R2.id.rb_last_status)
-    RadioButton rbLastStatus;
-    @BindView(R2.id.rg_power_status)
-    RadioGroup rgPowerStatus;
     private boolean mReceiverTag = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_power_status);
-        ButterKnife.bind(this);
-
-        int powerstate = MokoSupport.getInstance().powerState;
-        switch (powerstate) {
+    protected void onCreate() {
+        int powersState = MokoSupport.getInstance().powerState;
+        switch (powersState) {
             case 0:
-                rbSwitchOff.setChecked(true);
+                mBind.rbSwitchOff.setChecked(true);
                 break;
             case 1:
-                rbSwitchOn.setChecked(true);
+                mBind.rbSwitchOn.setChecked(true);
                 break;
             case 2:
-                rbLastStatus.setChecked(true);
+                mBind.rbLastStatus.setChecked(true);
                 break;
         }
-        rgPowerStatus.setOnCheckedChangeListener(this);
+        mBind.rgPowerStatus.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+    }
+
+    @Override
+    protected ActivityPowerStatusBinding getViewBinding() {
+        return ActivityPowerStatusBinding.inflate(getLayoutInflater());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,9 +13,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.moko.ble.lib.MokoConstants;
@@ -28,11 +24,9 @@ import com.moko.mokoplugpre.AppConstants;
 import com.moko.mokoplugpre.BuildConfig;
 import com.moko.mokoplugpre.PlugInfoParseableImpl;
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
 import com.moko.mokoplugpre.adapter.PlugListAdapter;
+import com.moko.mokoplugpre.databinding.ActivityMainPreBinding;
 import com.moko.mokoplugpre.dialog.AlertMessageDialog;
-import com.moko.mokoplugpre.dialog.LoadingDialog;
-import com.moko.mokoplugpre.dialog.LoadingMessageDialog;
 import com.moko.mokoplugpre.dialog.ScanFilterDialog;
 import com.moko.mokoplugpre.entity.PlugInfo;
 import com.moko.mokoplugpre.utils.ToastUtils;
@@ -55,26 +49,10 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
-public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemClickListener {
+public class PreMainActivity extends BaseActivity<ActivityMainPreBinding> implements MokoScanDeviceCallback, BaseQuickAdapter.OnItemClickListener {
 
-
-    @BindView(R2.id.rv_devices)
-    RecyclerView rvDevices;
-    @BindView(R2.id.iv_refresh)
-    ImageView ivRefresh;
-    @BindView(R2.id.tv_device_num)
-    TextView tvDeviceNum;
-    @BindView(R2.id.tv_filter)
-    TextView tvFilter;
-    @BindView(R2.id.rl_filter)
-    RelativeLayout rlFilter;
-    @BindView(R2.id.rl_edit_filter)
-    RelativeLayout rlEditFilter;
     private boolean mReceiverTag = false;
     private ConcurrentHashMap<String, PlugInfo> plugInfoHashMap;
     private ArrayList<PlugInfo> plugInfos;
@@ -87,14 +65,11 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
     private int mDeviceType;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_pre);
-        ButterKnife.bind(this);
+    protected void onCreate() {
         // 初始化Xlog
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // 优先保存到SD卡中
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MokoPlug" : "MokoPlugPre");
             } else {
                 PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MokoPlug" : "MokoPlugPre");
@@ -111,8 +86,8 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
         adapter.replaceData(plugInfos);
         adapter.setOnItemClickListener(this);
         adapter.openLoadAnimation();
-        rvDevices.setLayoutManager(new LinearLayoutManager(this));
-        rvDevices.setAdapter(adapter);
+        mBind.rvDevices.setLayoutManager(new LinearLayoutManager(this));
+        mBind.rvDevices.setAdapter(adapter);
         mHandler = new Handler(Looper.getMainLooper());
         mokoBleScanner = new MokoBleScanner(this);
         EventBus.getDefault().register(this);
@@ -129,6 +104,11 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
                 startScan();
             }
         }
+    }
+
+    @Override
+    protected ActivityMainPreBinding getViewBinding() {
+        return ActivityMainPreBinding.inflate(getLayoutInflater());
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -173,8 +153,8 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
         if (MokoConstants.ACTION_DISCOVER_SUCCESS.equals(action)) {
             // 设备连接成功，通知页面更新
             dismissLoadingProgressDialog();
-            showLoadingMessageDialog();
-            tvDeviceNum.postDelayed(() -> {
+            showLoadingMessageDialog("Verifying..");
+            mBind.tvDeviceNum.postDelayed(() -> {
                 ArrayList<OrderTask> orderTasks = new ArrayList<>();
                 orderTasks.add(OrderTaskAssembler.writeSystemTime());
                 orderTasks.add(OrderTaskAssembler.readAdvInterval());
@@ -277,7 +257,7 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
                         @Override
                         public void run() {
                             adapter.replaceData(plugInfos);
-                            tvDeviceNum.setText(String.format("DEVICE(%d)", plugInfos.size()));
+                            mBind.tvDeviceNum.setText(String.format("DEVICE(%d)", plugInfos.size()));
                         }
                     });
                     try {
@@ -386,8 +366,8 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
             mHandler.removeMessages(0);
             mokoBleScanner.stopScanDevice();
         }
-        rlFilter.setVisibility(View.GONE);
-        rlEditFilter.setVisibility(View.VISIBLE);
+        mBind.rlFilter.setVisibility(View.GONE);
+        mBind.rlEditFilter.setVisibility(View.VISIBLE);
         filterName = "";
         filterRssi = -100;
         if (isWindowLocked())
@@ -413,8 +393,8 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
                 PreMainActivity.this.filterName = filterName;
                 PreMainActivity.this.filterRssi = filterRssi;
                 if (!TextUtils.isEmpty(filterName) || filterRssi != -100) {
-                    rlFilter.setVisibility(View.VISIBLE);
-                    rlEditFilter.setVisibility(View.GONE);
+                    mBind.rlFilter.setVisibility(View.VISIBLE);
+                    mBind.rlEditFilter.setVisibility(View.GONE);
                     StringBuilder stringBuilder = new StringBuilder();
                     if (!TextUtils.isEmpty(filterName)) {
                         stringBuilder.append(filterName);
@@ -424,10 +404,10 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
                         stringBuilder.append(String.format("%sdBm", filterRssi + ""));
                         stringBuilder.append(";");
                     }
-                    tvFilter.setText(stringBuilder.toString());
+                    mBind.tvFilter.setText(stringBuilder.toString());
                 } else {
-                    rlFilter.setVisibility(View.GONE);
-                    rlEditFilter.setVisibility(View.VISIBLE);
+                    mBind.rlFilter.setVisibility(View.GONE);
+                    mBind.rlEditFilter.setVisibility(View.VISIBLE);
                 }
                 if (isWindowLocked())
                     return;
@@ -462,40 +442,13 @@ public class PreMainActivity extends BaseActivity implements MokoScanDeviceCallb
                 mokoBleScanner.stopScanDevice();
             }
             showLoadingProgressDialog();
-            ivRefresh.postDelayed(new Runnable() {
+            mBind.ivRefresh.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     MokoSupport.getInstance().connDevice(plugInfo.mac);
                 }
             }, 1000);
         }
-    }
-
-    private LoadingDialog mLoadingDialog;
-
-    private void showLoadingProgressDialog() {
-        mLoadingDialog = new LoadingDialog();
-        mLoadingDialog.show(getSupportFragmentManager());
-
-    }
-
-    private void dismissLoadingProgressDialog() {
-        if (mLoadingDialog != null)
-            mLoadingDialog.dismissAllowingStateLoss();
-    }
-
-    private LoadingMessageDialog mLoadingMessageDialog;
-
-    private void showLoadingMessageDialog() {
-        mLoadingMessageDialog = new LoadingMessageDialog();
-        mLoadingMessageDialog.setMessage("Verifying..");
-        mLoadingMessageDialog.show(getSupportFragmentManager());
-
-    }
-
-    private void dismissLoadingMessageDialog() {
-        if (mLoadingMessageDialog != null)
-            mLoadingMessageDialog.dismissAllowingStateLoss();
     }
 
     public void onBack(View view) {

@@ -3,45 +3,33 @@ package com.moko.mokoplugpre.dialog;
 import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.View;
-import android.widget.EditText;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.moko.mokoplugpre.R;
-import com.moko.mokoplugpre.R2;
+import com.moko.mokoplugpre.databinding.DialogScanFilterBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-public class ScanFilterDialog extends BaseDialog {
+public class ScanFilterDialog extends MokoBaseDialog<DialogScanFilterBinding> {
     public static final String TAG = ScanFilterDialog.class.getSimpleName();
 
-    @BindView(R2.id.et_filter_name)
-    EditText etFilterName;
-    @BindView(R2.id.tv_rssi)
-    TextView tvRssi;
-    @BindView(R2.id.sb_rssi)
-    SeekBar sbRssi;
 
     private int filterRssi;
     private String filterName;
 
     @Override
-    public int getLayoutRes() {
-        return R.layout.dialog_scan_filter;
+    protected DialogScanFilterBinding getViewBind(LayoutInflater inflater, ViewGroup container) {
+        return DialogScanFilterBinding.inflate(inflater, container, false);
     }
 
     @Override
-    public void bindView(View v) {
-        ButterKnife.bind(this, v);
-        tvRssi.setText(String.format("%sdBm", filterRssi + ""));
-        sbRssi.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+    protected void onCreateView() {
+        mBind.tvRssi.setText(String.format("%sdBm", filterRssi + ""));
+        mBind.sbRssi.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int rssi = progress - 100;
-                tvRssi.setText(String.format("%sdBm", rssi + ""));
+                mBind.tvRssi.setText(String.format("%sdBm", rssi + ""));
                 filterRssi = rssi;
             }
 
@@ -55,11 +43,18 @@ public class ScanFilterDialog extends BaseDialog {
 
             }
         });
-        sbRssi.setProgress(filterRssi + 100);
+        mBind.sbRssi.setProgress(filterRssi + 100);
         if (!TextUtils.isEmpty(filterName)) {
-            etFilterName.setText(filterName);
-            etFilterName.setSelection(filterName.length());
+            mBind.etFilterName.setText(filterName);
+            mBind.etFilterName.setSelection(filterName.length());
         }
+        mBind.ivFilterDelete.setOnClickListener(v -> {
+            mBind.etFilterName.setText("");
+        });
+        mBind.tvDone.setOnClickListener(v -> {
+            listener.onDone(mBind.etFilterName.getText().toString(), filterRssi);
+            dismiss();
+        });
     }
 
     @Override
@@ -93,17 +88,6 @@ public class ScanFilterDialog extends BaseDialog {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    @OnClick(R2.id.iv_filter_delete)
-    public void onFilterDelete(View view) {
-        etFilterName.setText("");
-    }
-
-    @OnClick(R2.id.tv_done)
-    public void onDone(View view) {
-        listener.onDone(etFilterName.getText().toString(), filterRssi);
-        dismiss();
     }
 
     private OnScanFilterListener listener;
